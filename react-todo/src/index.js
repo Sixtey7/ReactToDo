@@ -1,18 +1,22 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-
-function ChecklistItem(props) {
-    return ( 
-        <div>
-            <input type="checkbox" name="{props.name}" value="{props.name}" />
-            <label for="{props.name}">{props.name}</label>
-        </div>
-    );
-}
+import List from './components/List';
+import ChecklistItemModel from './models/ChecklistItemModel';
 
 // =============================================
 ReactDOM.render(
-    <ChecklistItem name="Hello"/>,
+    <List items={populateInitialList()}/>,
     document.getElementById('root')
 );
+
+function populateInitialList() {
+    var listToReturn = new Array(2);
+
+    var firstItem = new ChecklistItemModel(0, "First Item");
+    listToReturn[0] = firstItem;
+    var secondItem = new ChecklistItemModel(1, "Second Item");
+    listToReturn[1] = secondItem;
+
+    return listToReturn;
+}
