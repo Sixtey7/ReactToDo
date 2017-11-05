@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import ChecklistItemModel from '../models/ChecklistItemModel';
+import './List.css';
 
 function ChecklistItem(props) {
     return ( 
         <div>
-            <input type="checkbox" name={props.name} value={props.name} />
-            <label htmlFor={props.name}>{props.name}</label>
+            <input type="checkbox" name={props.name} value={props.name} onClick={props.onClick}/>
+            <label htmlFor={props.name} className={props.checked ? "checked-entry" : ""}>{props.name}</label>
         </div>
     );
 }
@@ -21,6 +22,7 @@ class List extends Component {
         console.log(JSON.stringify(this.state.items));
 
         this.addItem = this.addItem.bind(this);
+        this.itemClicked = this.itemClicked.bind(this);
     }
 
     addItem(event) {
@@ -50,9 +52,25 @@ class List extends Component {
         event.preventDefault();
     }
 
+    itemClicked(clickedItemId) {
+        console.log(clickedItemId + ' was clicked!');
+        var currentItems = this.state.items;
+
+        currentItems[clickedItemId].checked = !currentItems[clickedItemId].checked;
+
+        console.log(JSON.stringify(currentItems));
+
+        this.setState({
+            items: currentItems
+        });
+    }
+
     render() {
+        //TODO this feels like a hack, but need to capture the this I am referring to
+        var outerThis = this;
+
         var checklistList = this.state.items.map(function(item) {
-            return <ChecklistItem key={item.id} name={item.name} />;
+            return <ChecklistItem key={item.id} name={item.name} checked={item.checked} onClick={() => outerThis.itemClicked(item.id)}/>;
         });
 
         return (
