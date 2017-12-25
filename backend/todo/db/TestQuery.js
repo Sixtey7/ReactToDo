@@ -24,8 +24,7 @@ class TestQuery {
     }
 
     async select() {
-        //TODO: let text = 'select * from ${TestQuery.table}';
-        let text = 'select * from testtable';
+        let text = `select * from ${TestQuery.table}`;
         console.log('build the query\n' + text);
         let result = await this._pool.query(text);
         console.log('Got ' + result.rows.length + ' rows back!');
