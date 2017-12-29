@@ -22,6 +22,23 @@ router.post('/', async function(req, res) {
     return res.send(result);
 });
 
+
+router.put('/updateState', async function(req, res) {
+    if (typeof req.body.id === 'undefined') {
+        console.log('no id was received in updateState!');
+        res.json('id is required!');
+    }
+    else if (typeof req.body.checked === 'undefined') {
+        console.log('no state was received in updateState!');
+        res.json('state is required!');
+    }
+    else {
+        console.log('received both an id and a state - processing the request!');
+        let result = await todoQuery.updateTodoState({id: req.body.id, checked: req.body.checked});
+        return res.send(result);
+    }
+});
+
 router.get('/testGetAll', async function(req, res) {
     try {
         let queryResult = await testQuery.select();

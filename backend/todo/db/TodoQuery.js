@@ -31,7 +31,8 @@ class TodoQuery {
         await this._pool.query(`create schema if not exists ${dbSchema}`);
         let query = `create table if not exists ${TodoQuery.table} (
             id integer primary key,
-            name text
+            name text,
+            checked boolean
         )`;
         console.log('running the query\n' + query);
         return this._pool.query(query);
@@ -57,11 +58,28 @@ class TodoQuery {
             throw new TypeError('data is required');
         }
         //if we wanted to validate, now's the time
-        let text = `insert into ${TodoQuery.table} (id, name) values($1, $2)`;
-        let values = [data.id, data.name];
+        let text = `insert into ${TodoQuery.table} (id, name, checked) values($1, $2, $3)`;
+        let values = [data.id, data.name, data.checked];
         await this._pool.query({text, values});
         return data;
     }
+
+    /**
+     * Update the state of an existing todo
+     */
+    async updateTodoState(data) {
+        if (typeof data !== 'object') {
+            throw new TypeError('data is required!');
+        }
+        console.log('updating the todo with id: ' + data.id + ' setting to: ' + data.checked);
+
+        let text = `update ${TodoQuery.table} set checked = $1 where id = $2;`;
+        let values = [data.checked, data.id];
+        await this._pool.query({text, values});
+
+        return data;
+    }
+
 
     /**
      * Selects all of the todos
