@@ -17,25 +17,76 @@ router.get('/', async function(req, res, next) {
 });
 
 router.post('/', async function(req, res) {
-    //console.log('got the todo to insert:\n' + JSON.stringify(req.body));
-    let result = await todoQuery.insert(req.body);
-    return res.send(result);
+    try {
+        let result = await todoQuery.insert(req.body);
+        return res.json(result);
+    }
+    catch (err) {
+        console.log('got an error attempting to post a new todo!\n' + err);
+        return res.status(400).json('error: failed to save todo');
+    }
 });
 
 
 router.put('/updateState', async function(req, res) {
     if (typeof req.body.id === 'undefined') {
         console.log('no id was received in updateState!');
-        res.json('id is required!');
+        res.status(400).json('error: id is required!');
     }
     else if (typeof req.body.checked === 'undefined') {
         console.log('no state was received in updateState!');
-        res.json('state is required!');
+        res.status(400).json('error: state is required!');
     }
     else {
-        console.log('received both an id and a state - processing the request!');
-        let result = await todoQuery.updateTodoState({id: req.body.id, checked: req.body.checked});
-        return res.send(result);
+        try {
+            console.log('received both an id and a state - processing the request!');
+            let result = await todoQuery.updateTodoState({id: req.body.id, checked: req.body.checked});
+            return res.send(result);
+        }
+        catch (err) {
+            console.log('got an error attempting to update the state!\n' + err);
+            return res.status(400).json('error: failed to update state');
+        }
+    }
+});
+
+router.put('/updateName', async function(req, res) {
+    if (typeof req.body.id === 'undefined') {
+        console.log('no id was received in updateName!');
+        res.status(400).json('error: id is required!');
+    }
+    else if (typeof req.body.name === 'undefined') {
+        console.log('no name was received in updateName!');
+        res.status(400).json('error: name is required!');
+    }
+    else {
+        try {
+            console.log('received both an id and a name - processing the request!');
+            let result = await todoQuery.updateTodoText({id: req.body.id, name: req.body.name});
+            return res.send(result);
+        }
+        catch (err) {
+            console.log('got an error attempting to update the name!\n' + err);
+            return res.status(400).json('error: failed to update name');
+        }
+    }
+});
+
+router.delete('/', async function(req, res) {
+    if (typeof req.body.id === 'undefined') {
+        console.log('no id was received in delete!');
+        res.status(400).json('error: id is required');
+    }
+    else {
+        try {
+            console.log('received a request to delete: ' + req.body.id);
+            let result = await todoQuery.deleteTodo(req.body.id);
+            return res.send(result);
+        }
+        catch (err) {
+            console.log('got an error attempting to delete a todo!\n' + err);
+            res.status(400).json('error: failed to delete todo');
+        }
     }
 });
 

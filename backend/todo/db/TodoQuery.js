@@ -80,6 +80,40 @@ class TodoQuery {
         return data;
     }
 
+    /**
+     * Update the name of an existing todo
+     */
+    async updateTodoText(data) {
+        if (typeof data !== 'object') {
+            throw new TypeError('data is required');
+        }
+
+        console.log('updating the todo with id: ' + data.id + ' setting to: ' + data.name);
+
+        let text = `update ${TodoQuery.table} set name = $1 where id = $2;`;
+        let values = [data.name, data.id];
+        await this._pool.query({text, values});
+
+        return data;
+    }
+
+    /**
+     * Delete an existing todo
+     */
+    async deleteTodo(idToDelete) {
+        if (typeof idToDelete === 'undefined') {
+            throw new TypeError('an id to delete is required');
+        }
+
+        console.log('deleting the todo with id: ' + idToDelete);
+
+        let text = `delete from ${TodoQuery.table} where id = $1;`;
+        let values = [idToDelete];
+
+        await this._pool.query({text, values});
+
+        return "" + idToDelete;
+    }
 
     /**
      * Selects all of the todos
