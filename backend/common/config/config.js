@@ -9,7 +9,7 @@ const config = {
 
 config.pgPool.on('error', (err) => console.log(err));
 
-//NOTE: if we make a common config, this should be moved
+// NOTE: if we make a common config, this should be moved
 config.closed = new Promise(resolve => {
     config.close = function() {
         console.log('shutting down postgres pool');

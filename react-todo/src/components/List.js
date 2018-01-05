@@ -16,13 +16,32 @@ class List extends Component {
         super(props);
 
         this.state = {
-            items: this.props.items
+            //items: this.props.items
+            items: new Array()
         }
 
         console.log(JSON.stringify(this.state.items));
 
         this.addItem = this.addItem.bind(this);
         this.itemClicked = this.itemClicked.bind(this);
+    }
+    
+    getInitialState  = function (event){
+        console.log('initial state called!');
+    }
+
+    getTodos(){
+        return dispatch => {
+            dispatch({type: 'HELLO_WORLD'}),
+            fetch('http://localhost:3002/api/todo')
+            .then(req => req.json())
+            .then(json => console.log(json));
+        }
+    }
+
+    componentDidMount() {
+        console.log('component did mount called');
+        this.props.dispatch(this.getTodos());
     }
 
     addItem(event) {

@@ -1,10 +1,11 @@
 const express = require('express');
-var bodyParser = require('body-parser');
+const bodyParser = require('body-parser');
 
-//TODO: want to move 
-var cores = require('cors');
+// TODO: want to move
+const cores = require('cors');
 
-const config = require('./common/config/config');
+// const config = require('./common/config/config');
+require('./common/config/config');
 
 const app = express();
 

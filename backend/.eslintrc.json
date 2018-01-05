@@ -1,9 +1,17 @@
 {
     "extends": "./node_modules/eslint-config-google/index.js",
     "parserOptions": {
-        "ecmaVersion": 6
+        "ecmaVersion": 2017
     },
     "rules": {
-        "comma-dangle": [2, "never"]
+        "comma-dangle": [2, "never"],
+        "max-len": [2, 120],
+        "arrow-parens": [0],
+        "valid-jsdoc": [2, {
+            "requireParamDescription": false,
+            "requireReturnDescription": false,
+            "requireReturn": false,
+            "prefer": {"returns": "returns"}
+          }]
     }
 }

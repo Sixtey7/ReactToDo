@@ -1,14 +1,23 @@
 'use strict';
 
 const dbSchema = 'todo';
+/**
+ * Class that performs database operations for Todo
+ */
 class TodoQuery {
     /**
-     * The name of the table
+     * Function to obtain the name of the table
+     * @return {string} the name of the table
+     * @static
      */
     static get table() {
         return `${dbSchema}.todos`;
-    }
+    };
 
+    /**
+     * Creates a new instance of the TodoQuery object
+     * @param {pg-pool} pool - pg-pool object to use
+     */
     constructor(pool) {
         if (typeof pool !== 'object') {
             throw new TypeError('pool is required!');
@@ -57,7 +66,7 @@ class TodoQuery {
         if (typeof data !== 'object') {
             throw new TypeError('data is required');
         }
-        //if we wanted to validate, now's the time
+        // if we wanted to validate, now's the time
         let text = `insert into ${TodoQuery.table} (id, name, checked) values($1, $2, $3)`;
         let values = [data.id, data.name, data.checked];
         await this._pool.query({text, values});
@@ -66,7 +75,9 @@ class TodoQuery {
 
     /**
      * Update the state of an existing todo
-     */
+     * @param {Object} data - object containing an id and a checked state to update
+     * @returns {Promise} promise resolving to the response from the database
+     **/
     async updateTodoState(data) {
         if (typeof data !== 'object') {
             throw new TypeError('data is required!');
@@ -82,6 +93,8 @@ class TodoQuery {
 
     /**
      * Update the name of an existing todo
+     * @param {Object} data - id/name pair to be updated in the database
+     * @returns {Promise} a promise resolving with the result from the database
      */
     async updateTodoText(data) {
         if (typeof data !== 'object') {
@@ -99,7 +112,9 @@ class TodoQuery {
 
     /**
      * Delete an existing todo
-     */
+     * @param {integer} idToDelete the id of the todo to delete
+     * @returns {string} the id that was deleted
+     **/
     async deleteTodo(idToDelete) {
         if (typeof idToDelete === 'undefined') {
             throw new TypeError('an id to delete is required');
@@ -112,7 +127,7 @@ class TodoQuery {
 
         await this._pool.query({text, values});
 
-        return "" + idToDelete;
+        return '' + idToDelete;
     }
 
     /**
@@ -121,7 +136,7 @@ class TodoQuery {
      */
     async select() {
         let text = `select * from ${TodoQuery.table}`;
-        
+
         let result = await this._pool.query(text);
 
         console.log('got:\n' + result.rows.length);

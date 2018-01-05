@@ -2,13 +2,12 @@
 
 const Pool = require('pg-pool');
 
-/* 
+/**
 * Custom Pool that extends Pool from pg package
-*/
+**/
 class CustomPool extends Pool {
-
     /**
-     * Constructor 
+     * Constructor
      * @param {Object} postgresConfig The postgres config to use
      */
     constructor(postgresConfig = {}) {
@@ -17,14 +16,17 @@ class CustomPool extends Pool {
         this._retryMillis = postgresConfig.retryMillis;
     }
 
+    /**
+     * Performs a query against the database
+     * @return {Promise} Promise resolving to the results of the query
+     */
     async query() {
-        //retry every {retryMillis} ms up to a maximum {maxTries}
+        // retry every {retryMillis} ms up to a maximum {maxTries}
         for (let i = 0; i <= this._maxTries; i++) {
             try {
-                let results = await super.query(...arguments);
+                let results = await super.query(...args);
                 return results;
-            }
-            catch (err) {
+            } catch (err) {
                 if (i === this._maxTries) {
                     throw err;
                 }
